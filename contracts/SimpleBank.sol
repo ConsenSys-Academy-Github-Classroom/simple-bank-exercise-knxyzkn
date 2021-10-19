@@ -45,7 +45,7 @@ contract SimpleBank {
     // Added so ether sent to this contract is reverted if the contract fails
     // otherwise, the sender's money is transferred to contract
     function () external payable {
-        revert();
+        revert("Not a valid function!");
     }
 
     /// @notice Get balance
@@ -81,7 +81,7 @@ contract SimpleBank {
 
       // 5. return the balance of sndr of this transaction
 
-      require(enrolled[msg.sender]);
+      require(enrolled[msg.sender], "User not enrolled!");
       balances[msg.sender]+=msg.value;
       emit LogDepositMade(msg.sender, msg.value);
       return balances[msg.sender];
@@ -104,7 +104,7 @@ contract SimpleBank {
 
       // 3. Emit the appropriate event for this message
 
-      require(balances[msg.sender] >= withdrawAmount);
+      require(balances[msg.sender] >= withdrawAmount, "Not enough balance in account to withdraw!");
       bool sendValue = msg.sender.send(withdrawAmount);
       require(sendValue, "Failed to send!");
       balances[msg.sender] -= withdrawAmount;
